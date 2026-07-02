@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e249b0e7-0729-4f80-ae51-9e3968b951a7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecoroute-frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/ecoroute-frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecoroute-frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/ecoroute-frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
