@@ -145,9 +145,10 @@ export default function App() {
   // ── Render: Login ──────────────────────────────────────────────────────────
   if (!loggedInUser && view === 'login') {
     return (
+      <div style={pageWrap}>
         <div style={authWrap}>
           <h1 style={brand}>EcoTrac</h1>
-          <p style={{ color: '#555', marginTop: -8, marginBottom: 24 }}>Route Optimizer</p>
+          <p style={subtitle}>Route Optimizer</p>
 
           <form onSubmit={handleLogin} style={formCol}>
             <select
@@ -176,20 +177,22 @@ export default function App() {
             </button>
           </form>
 
-          <p style={{ marginTop: 16, fontSize: 14, color: '#555' }}>
+          <p style={footerText}>
             Don't have an account?{' '}
             <span style={link} onClick={() => switchView('signup')}>Sign up</span>
           </p>
         </div>
+      </div>
     );
   }
 
   // ── Render: Signup ─────────────────────────────────────────────────────────
   if (!loggedInUser && view === 'signup') {
     return (
+      <div style={pageWrap}>
         <div style={authWrap}>
           <h1 style={brand}>EcoTrac</h1>
-          <p style={{ color: '#555', marginTop: -8, marginBottom: 24 }}>Create your account</p>
+          <p style={subtitle}>Create your account</p>
 
           <form onSubmit={handleSignup} style={formCol}>
             <input
@@ -232,19 +235,21 @@ export default function App() {
             </button>
           </form>
 
-          <p style={{ marginTop: 16, fontSize: 14, color: '#555' }}>
+          <p style={footerText}>
             Already have an account?{' '}
             <span style={link} onClick={() => switchView('login')}>Login</span>
           </p>
         </div>
+      </div>
     );
   }
 
   // ── Render: Main app ───────────────────────────────────────────────────────
   return (
-      <div style={{ maxWidth: 700, margin: '2rem auto', fontFamily: 'sans-serif', padding: '0 1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1 style={{ color: '#1D9E75', margin: 0, fontSize: 20, letterSpacing: 'normal' }}>EcoTrac — Route Optimizer</h1>
+    <div style={{ minHeight: '100vh', background: '#f5f7f6', boxSizing: 'border-box' }}>
+      <div style={{ maxWidth: 700, margin: '0 auto', fontFamily: 'sans-serif', padding: '2rem 1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 16, borderBottom: '1px solid #e4e7e6' }}>
+          <h1 style={{ color: '#1D9E75', margin: 0, fontSize: 20, fontWeight: 700, letterSpacing: 'normal' }}>EcoTrac — Route Optimizer</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ fontSize: 14, color: '#555' }}>
               Logged in as <strong>{loggedInUser.name}</strong>
@@ -294,41 +299,50 @@ export default function App() {
 
         {history.length > 0 && (
             <div style={{ marginTop: 32 }}>
-              <h3>Route history</h3>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-                <thead>
-                <tr style={{ background: '#f5f5f5' }}>
-                  <th style={th}>Origin</th><th style={th}>Destination</th><th style={th}>CO₂ (kg)</th>
-                </tr>
-                </thead>
-                <tbody>
-                {history.map(r => (
-                    <tr key={r.routeId}>
-                      <td style={td}>{r.origin}</td>
-                      <td style={td}>{r.destination}</td>
-                      <td style={td}>{r.co2Emitted?.toFixed(2)}</td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
+              <h3 style={{ fontSize: 15, fontWeight: 600, color: '#333', marginBottom: 12 }}>Route history</h3>
+              <div style={{ border: '1px solid #e4e7e6', borderRadius: 10, overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, background: '#fff' }}>
+                  <thead>
+                  <tr style={{ background: '#f5f7f6' }}>
+                    <th style={th}>Origin</th><th style={th}>Destination</th><th style={th}>CO₂ (kg)</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {history.map(r => (
+                      <tr key={r.routeId}>
+                        <td style={td}>{r.origin}</td>
+                        <td style={td}>{r.destination}</td>
+                        <td style={td}>{r.co2Emitted?.toFixed(2)}</td>
+                      </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
         )}
       </div>
+    </div>
   );
 }
 
 // ── Shared styles ────────────────────────────────────────────────────────────
-const authWrap = {
-  maxWidth: 380, margin: '4rem auto', fontFamily: 'sans-serif',
-  padding: '2rem', border: '1px solid #ddd', borderRadius: 12,
-  boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+const pageWrap = {
+  minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+  background: '#f5f7f6', padding: '1rem', boxSizing: 'border-box',
 };
-const brand   = { color: '#1D9E75', margin: 0, textAlign: 'center', fontSize: 28, letterSpacing: 'normal' };
-const formCol = { display: 'flex', flexDirection: 'column', gap: 12 };
-const input   = { padding: '10px 12px', borderRadius: 6, border: '1px solid #ccc', fontSize: 14 };
-const btn     = { background: '#1D9E75', color: '#fff', border: 'none', padding: '10px', borderRadius: 6, cursor: 'pointer', fontSize: 14 };
-const errStyle = { color: 'red', margin: 0, fontSize: 13 };
-const link    = { color: '#1D9E75', cursor: 'pointer', textDecoration: 'underline' };
-const logoutBtn = { background: 'none', border: '1px solid #ccc', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 13 };
-const th      = { padding: '8px 12px', textAlign: 'left', borderBottom: '1px solid #ddd' };
+const authWrap = {
+  width: '100%', maxWidth: 380, background: '#fff', fontFamily: 'sans-serif',
+  padding: '2.25rem 2rem', border: '1px solid #e4e7e6', borderRadius: 14,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.07)', boxSizing: 'border-box',
+};
+const brand    = { color: '#1D9E75', margin: 0, textAlign: 'center', fontSize: 28, fontWeight: 700, letterSpacing: 'normal' };
+const subtitle = { color: '#7a8b87', margin: '6px 0 24px', textAlign: 'center', fontSize: 14 };
+const formCol  = { display: 'flex', flexDirection: 'column', gap: 12 };
+const input    = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #d7dbda', fontSize: 14, color: '#222', boxSizing: 'border-box' };
+const btn      = { background: '#1D9E75', color: '#fff', border: 'none', padding: '11px', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 };
+const errStyle = { color: '#c0392b', margin: 0, fontSize: 13 };
+const link     = { color: '#1D9E75', cursor: 'pointer', fontWeight: 500, textDecoration: 'underline' };
+const footerText = { marginTop: 20, textAlign: 'center', fontSize: 13, color: '#7a8b87' };
+const logoutBtn = { background: 'none', border: '1px solid #d7dbda', padding: '6px 12px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#555' };
+const th      = { padding: '9px 12px', textAlign: 'left', borderBottom: '2px solid #eee', fontWeight: 600, fontSize: 13, color: '#555' };
 const td      = { padding: '8px 12px', borderBottom: '1px solid #eee' };
