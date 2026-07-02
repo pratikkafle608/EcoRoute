@@ -244,7 +244,7 @@ export default function App() {
   return (
       <div style={{ maxWidth: 700, margin: '2rem auto', fontFamily: 'sans-serif', padding: '0 1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1 style={{ color: '#1D9E75', margin: 0 }}>EcoTrac — Route Optimizer</h1>
+          <h1 style={{ color: '#1D9E75', margin: 0, fontSize: 20, letterSpacing: 'normal' }}>EcoTrac — Route Optimizer</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ fontSize: 14, color: '#555' }}>
               Logged in as <strong>{loggedInUser.name}</strong>
@@ -323,7 +323,7 @@ const authWrap = {
   padding: '2rem', border: '1px solid #ddd', borderRadius: 12,
   boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
 };
-const brand   = { color: '#1D9E75', margin: 0, textAlign: 'center' };
+const brand   = { color: '#1D9E75', margin: 0, textAlign: 'center', fontSize: 28, letterSpacing: 'normal' };
 const formCol = { display: 'flex', flexDirection: 'column', gap: 12 };
 const input   = { padding: '10px 12px', borderRadius: 6, border: '1px solid #ccc', fontSize: 14 };
 const btn     = { background: '#1D9E75', color: '#fff', border: 'none', padding: '10px', borderRadius: 6, cursor: 'pointer', fontSize: 14 };
