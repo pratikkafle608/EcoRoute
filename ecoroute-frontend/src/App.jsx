@@ -157,8 +157,8 @@ export default function App() {
                 style={input}
                 required
             >
-              <option value="">Select your account</option>
-              {users.map(u => <option key={u.userId} value={u.userId}>{u.name}</option>)}
+              <option value="" style={optionStyle}>Select your account</option>
+              {users.map(u => <option key={u.userId} value={u.userId} style={optionStyle}>{u.name}</option>)}
             </select>
 
             <input
@@ -265,9 +265,9 @@ export default function App() {
               style={input}
               required
           >
-            <option value="">Select vehicle</option>
+            <option value="" style={optionStyle}>Select vehicle</option>
             {vehicles.map(v => (
-                <option key={v.vehicleId} value={v.vehicleId}>
+                <option key={v.vehicleId} value={v.vehicleId} style={optionStyle}>
                   {v.modelType} ({v.fuelType})
                 </option>
             ))}
@@ -338,7 +338,8 @@ const authWrap = {
 const brand    = { color: '#1D9E75', margin: 0, textAlign: 'center', fontSize: 28, fontWeight: 700, letterSpacing: 'normal' };
 const subtitle = { color: '#7a8b87', margin: '6px 0 24px', textAlign: 'center', fontSize: 14 };
 const formCol  = { display: 'flex', flexDirection: 'column', gap: 12 };
-const input    = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #d7dbda', fontSize: 14, color: '#222', boxSizing: 'border-box' };
+const input    = { width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #3a413f', fontSize: 14, color: '#fff', background: '#2b2f2e', boxSizing: 'border-box' };
+const optionStyle = { color: '#fff', background: '#2b2f2e' };
 const btn      = { background: '#1D9E75', color: '#fff', border: 'none', padding: '11px', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 };
 const errStyle = { color: '#c0392b', margin: 0, fontSize: 13 };
 const link     = { color: '#1D9E75', cursor: 'pointer', fontWeight: 500, textDecoration: 'underline' };
