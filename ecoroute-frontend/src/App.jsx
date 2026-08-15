@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const API = 'http://localhost:8080/api';
@@ -6,11 +6,10 @@ const API = 'http://localhost:8080/api';
 export default function App() {
   // auth state
   const [view,         setView]         = useState('login'); // 'login' | 'signup'
-  const [users,        setUsers]        = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
   // login form
-  const [loginForm,    setLoginForm]    = useState({ userId: '', password: '' });
+  const [loginForm,    setLoginForm]    = useState({ email: '', password: '' });
   const [loginError,   setLoginError]   = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -20,16 +19,11 @@ export default function App() {
   const [signupLoading, setSignupLoading] = useState(false);
 
   // main app state
-  const [vehicles, setVehicles] = useState([]);
-  const [form,     setForm]     = useState({ vehicleId: '', origin: '', destination: '' });
+  const [form,     setForm]     = useState({ vehicleName: '', fuelType: 'petrol', origin: '', destination: '' });
   const [result,   setResult]   = useState(null);
   const [history,  setHistory]  = useState([]);
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState('');
-
-  useEffect(() => {
-    axios.get(`${API}/users`).then(r => setUsers(r.data));
-  }, []);
 
   const switchView = (v) => {
     setView(v);
@@ -44,7 +38,7 @@ export default function App() {
     setLoginError('');
     try {
       const r = await axios.post(`${API}/login`, {
-        userId:   parseInt(loginForm.userId),
+        email:    loginForm.email.trim(),
         password: loginForm.password,
       });
       await enterApp(r.data);
@@ -75,17 +69,12 @@ export default function App() {
         email:    signupForm.email.trim(),
         password: signupForm.password,
       });
-      // refresh user list, then auto-login by finding the new user
-      const usersRes = await axios.get(`${API}/users`);
-      setUsers(usersRes.data);
-      const newUser = usersRes.data.find(u => u.email === signupForm.email.trim());
-      if (newUser) {
-        const loginRes = await axios.post(`${API}/login`, {
-          userId:   newUser.userId,
-          password: signupForm.password,
-        });
-        await enterApp(loginRes.data);
-      }
+      // auto-login with the new account's credentials
+      const loginRes = await axios.post(`${API}/login`, {
+        email:    signupForm.email.trim(),
+        password: signupForm.password,
+      });
+      await enterApp(loginRes.data);
     } catch (err) {
       if (err.response?.status === 409) {
         setSignupError('An account with that email already exists.');
@@ -100,22 +89,17 @@ export default function App() {
   // shared: load user data and enter the main app
   const enterApp = async (user) => {
     setLoggedInUser(user);
-    const [vehiclesRes, historyRes] = await Promise.all([
-      axios.get(`${API}/vehicles/user/${user.userId}`),
-      axios.get(`${API}/routes/history/${user.userId}`),
-    ]);
-    setVehicles(vehiclesRes.data);
+    const historyRes = await axios.get(`${API}/routes/history/${user.userId}`);
     setHistory(historyRes.data);
   };
 
   const handleLogout = () => {
     setLoggedInUser(null);
-    setLoginForm({ userId: '', password: '' });
+    setLoginForm({ email: '', password: '' });
     setSignupForm({ name: '', email: '', password: '', confirm: '' });
     setLoginError('');
     setSignupError('');
-    setVehicles([]);
-    setForm({ vehicleId: '', origin: '', destination: '' });
+    setForm({ vehicleName: '', fuelType: 'petrol', origin: '', destination: '' });
     setResult(null);
     setHistory([]);
     setError('');
@@ -127,9 +111,14 @@ export default function App() {
     e.preventDefault();
     setLoading(true); setError(''); setResult(null);
     try {
+      const vehicleRes = await axios.post(`${API}/vehicles`, {
+        user:      { userId: loggedInUser.userId },
+        modelType: form.vehicleName.trim(),
+        fuelType:  form.fuelType,
+      });
       const r = await axios.post(`${API}/routes/calculate`, {
         userId:      loggedInUser.userId,
-        vehicleId:   parseInt(form.vehicleId),
+        vehicleId:   vehicleRes.data.vehicleId,
         origin:      form.origin,
         destination: form.destination,
       });
@@ -151,15 +140,14 @@ export default function App() {
           <p style={subtitle}>Route Optimizer</p>
 
           <form onSubmit={handleLogin} style={formCol}>
-            <select
-                value={loginForm.userId}
-                onChange={e => setLoginForm(f => ({ ...f, userId: e.target.value, password: '' }))}
+            <input
+                type="email"
+                placeholder="Email address"
+                value={loginForm.email}
+                onChange={e => setLoginForm(f => ({ ...f, email: e.target.value }))}
                 style={input}
                 required
-            >
-              <option value="" style={optionStyle}>Select your account</option>
-              {users.map(u => <option key={u.userId} value={u.userId} style={optionStyle}>{u.name}</option>)}
-            </select>
+            />
 
             <input
                 type="password"
@@ -172,7 +160,7 @@ export default function App() {
 
             {loginError && <p style={errStyle}>{loginError}</p>}
 
-            <button type="submit" disabled={loginLoading || !loginForm.userId} style={btn}>
+            <button type="submit" disabled={loginLoading || !loginForm.email} style={btn}>
               {loginLoading ? 'Logging in…' : 'Login'}
             </button>
           </form>
@@ -259,18 +247,19 @@ export default function App() {
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 24 }}>
+          <input placeholder="Vehicle name (e.g. Honda Civic)"
+                 value={form.vehicleName} onChange={e => setForm(f => ({ ...f, vehicleName: e.target.value }))}
+                 style={input} required />
+
           <select
-              value={form.vehicleId}
-              onChange={e => setForm(f => ({ ...f, vehicleId: e.target.value }))}
+              value={form.fuelType}
+              onChange={e => setForm(f => ({ ...f, fuelType: e.target.value }))}
               style={input}
               required
           >
-            <option value="" style={optionStyle}>Select vehicle</option>
-            {vehicles.map(v => (
-                <option key={v.vehicleId} value={v.vehicleId} style={optionStyle}>
-                  {v.modelType} ({v.fuelType})
-                </option>
-            ))}
+            <option value="petrol" style={optionStyle}>Petrol</option>
+            <option value="diesel" style={optionStyle}>Diesel</option>
+            <option value="electric" style={optionStyle}>Electric</option>
           </select>
 
           <input placeholder="Origin (e.g. Dallas, TX)"

@@ -21,14 +21,21 @@ public class LoginController {
     @PostMapping("/login")
     @Transactional(readOnly = true)
     public ResponseEntity<?> login(@RequestBody Map<String, Object> body) {
-        Integer userId = (Integer) body.get("userId");
+        String email = (String) body.get("email");
         String inputPassword = (String) body.get("password");
 
-        if (userId == null || inputPassword == null || inputPassword.isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "userId and password are required"));
+        if (email == null || email.isBlank() || inputPassword == null || inputPassword.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "email and password are required"));
         }
 
-        Password record = passwordRepo.findByUserUserId(userId).orElse(null);
+        User user = userRepo.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "No account found for this email"));
+        }
+
+        Password record = passwordRepo.findByUserUserId(user.getUserId()).orElse(null);
 
         if (record == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
