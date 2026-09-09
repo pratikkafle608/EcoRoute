@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e249b0e7-0729-4f80-ae51-9e3968b951a7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.claude/worktrees/frontend-dark-theme" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/worktrees/frontend-dark-theme" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/ecorouteoptimizer/demo/service/RouteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/ecorouteoptimizer/demo/service/RouteService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecoroute-frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/ecoroute-frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecoroute-frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/ecoroute-frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +53,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/demo/src/main/java/com/ecorouteoptimizer/demo/service/RouteService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ecoroute-frontend/src/App.jsx" root0="SKIP_INSPECTION" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -122,6 +123,14 @@
       <workItem from="1782593567194" duration="3655000" />
       <workItem from="1782958250331" duration="3567000" />
       <workItem from="1783002908299" duration="2045000" />
+      <workItem from="1783221899867" duration="4412000" />
+      <workItem from="1783890500733" duration="3537000" />
+      <workItem from="1785556014118" duration="3430000" />
+      <workItem from="1786824267591" duration="8502000" />
+      <workItem from="1787455935033" duration="8946000" />
+      <workItem from="1788058167798" duration="211000" />
+      <workItem from="1788216940316" duration="405000" />
+      <workItem from="1788827954355" duration="8353000" />
     </task>
     <servers />
   </component>

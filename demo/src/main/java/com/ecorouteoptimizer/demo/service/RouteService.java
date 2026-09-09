@@ -43,7 +43,7 @@ public class RouteService {
                     origin, destination, vehicle.getFuelType(), distanceKm, totalCo2
             );
         } catch (ExternalApiException e) {
-            recommendation = "Eco recommendation unavailable right now.";
+            recommendation = "";
         }
 
         // 4. Save route to DB

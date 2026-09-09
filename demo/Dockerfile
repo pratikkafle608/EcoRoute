@@ -15,6 +15,7 @@ FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/app.jar app.jar
 
-# Render assigns the port to listen on via $PORT; application.properties reads it.
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Dynamically pass PORT environment variable to Spring Boot
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
