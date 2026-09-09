@@ -2,11 +2,11 @@
 FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+COPY demo/.mvn/ .mvn/
+COPY demo/mvnw demo/pom.xml ./
 RUN chmod +x mvnw && ./mvnw -B dependency:go-offline
 
-COPY src ./src
+COPY demo/src ./src
 RUN ./mvnw -B -DskipTests package && \
     mv target/*.jar target/app.jar
 
