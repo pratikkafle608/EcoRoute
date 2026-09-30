@@ -9,7 +9,8 @@ import ResultCard from './components/ResultCard';
 import HistoryTable from './components/HistoryTable';
 import { errStyle } from './styles';
 
-const API = 'http://localhost:8080/api'; //this points to the backend running in the port 8080
+// Local dev hits the backend on 8080; the Docker build sets VITE_API_URL=/api so nginx proxies it
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 export default function App() {
   // auth state

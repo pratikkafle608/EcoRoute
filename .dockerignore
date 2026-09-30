@@ -1,0 +1,10 @@
+# Backend image builds from the repo root (see demo/Dockerfile); keep the context small
+.git
+.idea
+.claude
+**/node_modules
+ecoroute-frontend
+supabase_migration
+demo/target
+*.log
+.env

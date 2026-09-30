@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: demo/Dockerfile
+    image: ecoroute-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: 8080
+    # Not published to the host: only reachable through the frontend's /api proxy
+    expose:
+      - "8080"
+
+  frontend:
+    build:
+      context: ./ecoroute-frontend
+    image: ecoroute-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${APP_PORT:-80}:80"
