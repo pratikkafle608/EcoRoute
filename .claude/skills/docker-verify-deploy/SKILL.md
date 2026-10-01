@@ -198,6 +198,6 @@ the new version is live and healthy.
   repo root to match the `COPY demo/...` paths in the Dockerfile — see step 1)
 - **Required environment variables** (set in Render's dashboard, never in
   committed files): `SUPABASE_DB_URL`, `SUPABASE_DB_USER`,
-  `SUPABASE_DB_PASSWORD`, plus `GOOGLE_MAPS_API_KEY`, `CLIMATIQ_API_KEY`,
+  `SUPABASE_DB_PASSWORD`, plus `MAPTILER_API_KEY`, `CLIMATIQ_API_KEY`,
   `OPENAI_API_KEY` for full feature coverage. `PORT` is injected by Render
   automatically — don't set it.

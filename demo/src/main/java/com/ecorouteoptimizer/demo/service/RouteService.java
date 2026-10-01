@@ -17,7 +17,7 @@ public class RouteService {
     @Autowired private UserRepository       userRepo;
     @Autowired private VehicleRepository    vehicleRepo;
     @Autowired private WaypointRepository   waypointRepo;
-    @Autowired private GoogleMapsService    mapsService;
+    @Autowired private MapTilerService      mapsService;
     @Autowired private ClimatiqService      climatiqService;
     @Autowired private OpenAiService        openAiService;
 
@@ -28,7 +28,7 @@ public class RouteService {
         Vehicle vehicle = vehicleRepo.findById(vehicleId)
                 .orElseThrow(() -> new NoSuchElementException("Vehicle not found: " + vehicleId));
 
-        // 1. Get distance from Google Maps
+        // 1. Get driving distance (MapTiler geocoding + OSRM routing)
         double distanceKm = mapsService.getDistanceKm(origin, destination);
 
         // 2. Get emission factor from Climatiq

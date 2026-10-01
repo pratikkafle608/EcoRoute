@@ -7,8 +7,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ApiConfig {
-    @Value("${google.maps.api.key}")
-    public String googleKey;
+    @Value("${maptiler.api.key}")
+    public String maptilerKey;
+
+    @Value("${maptiler.api.url}")
+    public String maptilerUrl;
+
+    @Value("${osrm.api.url}")
+    public String osrmUrl;
 
     @Value("${climatiq.api.key}")
     public String climatiqKey;
