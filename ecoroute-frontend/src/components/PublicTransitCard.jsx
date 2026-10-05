@@ -41,9 +41,9 @@ export default function PublicTransitCard({ transit, drivingCo2 }) {
 const transitCardStyle = {
     marginTop: '16px',
     padding: '16px',
-    border: '1px solid #B4E2D5',
+    border: '1px solid #1f5e4c',
     borderRadius: '8px',
-    background: '#F0FAF7',
+    background: '#12302a',
     fontFamily: 'sans-serif',
 };
 
@@ -56,7 +56,7 @@ const headerStyle = {
 
 const titleStyle = {
     margin: 0,
-    color: '#114B3E',
+    color: '#7fe0bf',
     fontSize: '16px',
 };
 
@@ -74,14 +74,14 @@ const gridStyle = {
     gridTemplateColumns: '1fr 1fr',
     gap: '10px',
     fontSize: '14px',
-    color: '#2C3E50',
+    color: '#d6efe6',
 };
 
 const savingsBannerStyle = {
     marginTop: '12px',
     padding: '10px',
-    background: '#E1F5EE',
+    background: '#0d241f',
     borderRadius: '6px',
     fontSize: '13px',
-    color: '#085041',
+    color: '#a8ecd4',
 };

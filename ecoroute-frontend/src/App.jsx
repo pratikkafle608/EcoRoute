@@ -188,7 +188,7 @@ export default function App() {
 
   // ── Render: Main app ───────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f7f6', boxSizing: 'border-box' }}>
+    <div style={{ minHeight: '100vh', background: '#0f1413', boxSizing: 'border-box' }}>
       <div style={{ maxWidth: 700, margin: '0 auto', fontFamily: 'sans-serif', padding: '2rem 1rem' }}>
         <AppHeader userName={loggedInUser.name} onLogout={handleLogout} />
 
