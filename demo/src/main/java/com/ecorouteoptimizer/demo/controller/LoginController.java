@@ -4,12 +4,14 @@ import com.ecorouteoptimizer.demo.model.Password;
 import com.ecorouteoptimizer.demo.model.User;
 import com.ecorouteoptimizer.demo.repository.PasswordRepository;
 import com.ecorouteoptimizer.demo.repository.UserRepository;
+import com.ecorouteoptimizer.demo.service.AuthTokens;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -19,6 +21,7 @@ public class LoginController {
     @Autowired private PasswordRepository passwordRepo;
     @Autowired private UserRepository userRepo;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private AuthTokens tokens;
 
     @PostMapping("/login")
     @Transactional(readOnly = true)
@@ -49,7 +52,7 @@ public class LoginController {
                     .body(Map.of("error", "Incorrect password"));
         }
 
-        return ResponseEntity.ok(record.getUser());
+        return ResponseEntity.ok(withToken(record.getUser()));
     }
 
     @PostMapping("/signup")
@@ -80,6 +83,17 @@ public class LoginController {
         pwd.setPassword(passwordEncoder.encode(password));
         passwordRepo.save(pwd);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(withToken(saved));
+    }
+
+    // The user's fields plus a signed token the frontend sends as "Authorization: Bearer <token>"
+    private Map<String, Object> withToken(User u) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("userId", u.getUserId());
+        body.put("name", u.getName());
+        body.put("email", u.getEmail());
+        body.put("totalSaved", u.getTotalSaved());
+        body.put("token", tokens.issue(u.getUserId()));
+        return body;
     }
 }

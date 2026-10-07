@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Map;
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Map<String, String>> handleNoRoute(NoResourceFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "No such endpoint"));
+    }
+
+    // e.g. 403 when a token's user asks for another user's data
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> handleStatus(ResponseStatusException e) {
+        return ResponseEntity.status(e.getStatusCode()).body(Map.of("error", "Not allowed"));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

@@ -72,6 +72,11 @@ export default function App() {
       const h = await axios.get(`${API}/routes/history/${loggedInUser.userId}`);
       setHistory(h.data);
     } catch (err) {
+      if (err.response?.status === 401) {
+        handleLogout();
+        setLoginError('Your session expired. Please log in again.');
+        return;
+      }
       setError(err.response?.status === 429 ? err.response.data.error : 'Calculation failed. Check the console.');
       console.error(err);
     } finally { setLoading(false); }
@@ -144,12 +149,15 @@ export default function App() {
 
   // shared: load user data and enter the main app
   const enterApp = async (user) => {
+    // Every API call except login/signup needs the token; it lives in memory only, so a reload logs out
+    axios.defaults.headers.common.Authorization = `Bearer ${user.token}`;
     setLoggedInUser(user);
     const historyRes = await axios.get(`${API}/routes/history/${user.userId}`);
     setHistory(historyRes.data);
   };
 
   const handleLogout = () => {
+    delete axios.defaults.headers.common.Authorization;
     setLoggedInUser(null);
     setLoginForm({ email: '', password: '' });
     setSignupForm({ name: '', email: '', password: '', confirm: '' });

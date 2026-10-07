@@ -95,17 +95,24 @@ Check the actual `@GetMapping`/`@PostMapping` paths in
 `demo/src/main/java/com/ecorouteoptimizer/demo/controller/*.java` before
 curling — this app does **not** expose plain collection endpoints like
 `GET /api/routes` or `GET /api/vehicles`; those return 404 (or did return a
-misleading 500 before the fix in step 5) by design. Known-good real endpoints:
+misleading 500 before the fix in step 5) by design.
+
+Every `/api` endpoint except `/api/login` and `/api/signup` requires
+`Authorization: Bearer <token>` (issued by login/signup, signed with
+`AUTH_TOKEN_SECRET`), and only returns the token owner's own data. Real users'
+passwords are BCrypt-hashed and unknown, so don't try to log in as them, and
+don't create junk accounts in the shared Supabase DB. Instead verify:
 
 ```
-curl -s http://127.0.0.1:8081/api/users/1   # name + userId only; there is deliberately no list-all endpoint
-curl -s http://127.0.0.1:8081/api/routes/history/1
-curl -s http://127.0.0.1:8081/api/vehicles/user/1
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8081/api/routes/history/1   # expect 401
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8081/api/vehicles/user/1    # expect 401
+curl -s -H 'Content-Type: application/json' -d '{"email":"nobody@test.local","password":"x"}' \
+     http://127.0.0.1:8081/api/login   # expect 401 "No account found" - proves the DB query works
 ```
 
-Confirm the response contains real data (user names, route origins/destinations,
-`co2Emitted` values) — not an error JSON — and that an intentionally-unmapped
-path returns a proper 404:
+For an authenticated end-to-end check, run the image against a throwaway
+`postgres:16-alpine` container, sign up a test user there, and use its token.
+Also confirm an intentionally-unmapped path returns a proper 404:
 
 ```
 curl -s -o /dev/null -w "status: %{http_code}\n" http://127.0.0.1:8081/
@@ -183,10 +190,10 @@ service if it's ever in doubt). After pushing, poll the production URL
 rather than declaring victory immediately — a Render deploy typically takes
 1-3 minutes:
 ```
-until curl -s -o /dev/null -w "%{http_code}" https://<service>.onrender.com/api/routes/history/1 | grep -q 200; do
+until curl -s -o /dev/null -w "%{http_code}" https://<service>.onrender.com/api/routes/history/1 | grep -q 401; do
   sleep 15
 done
-curl -s https://<service>.onrender.com/api/routes/history/1
+curl -s https://<service>.onrender.com/api/routes/history/1   # 401 = new auth build is live and healthy
 ```
 Only report the task complete once this production check actually returns
 the expected data — a successful `git push` is not itself confirmation that
@@ -198,6 +205,7 @@ the new version is live and healthy.
   repo root to match the `COPY demo/...` paths in the Dockerfile — see step 1)
 - **Required environment variables** (set in Render's dashboard, never in
   committed files): `SUPABASE_DB_URL`, `SUPABASE_DB_USER`,
-  `SUPABASE_DB_PASSWORD`, plus `MAPTILER_API_KEY`, `CLIMATIQ_API_KEY`,
+  `SUPABASE_DB_PASSWORD`, `AUTH_TOKEN_SECRET` (else every deploy logs all
+  users out), plus `MAPTILER_API_KEY`, `CLIMATIQ_API_KEY`,
   `OPENAI_API_KEY` for full feature coverage. `PORT` is injected by Render
   automatically — don't set it.

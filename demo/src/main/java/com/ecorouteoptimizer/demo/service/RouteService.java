@@ -27,6 +27,9 @@ public class RouteService {
                 .orElseThrow(() -> new NoSuchElementException("User not found: " + userId));
         Vehicle vehicle = vehicleRepo.findById(vehicleId)
                 .orElseThrow(() -> new NoSuchElementException("Vehicle not found: " + vehicleId));
+        // Other users' vehicles look the same as missing ones
+        if (vehicle.getUser() == null || !userId.equals(vehicle.getUser().getUserId()))
+            throw new NoSuchElementException("Vehicle not found: " + vehicleId);
 
         // 1. Get driving distance (MapTiler geocoding + OSRM routing)
         double distanceKm = mapsService.getDistanceKm(origin, destination);
