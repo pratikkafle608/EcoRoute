@@ -72,7 +72,7 @@ export default function App() {
       const h = await axios.get(`${API}/routes/history/${loggedInUser.userId}`);
       setHistory(h.data);
     } catch (err) {
-      setError('Calculation failed. Check the console.');
+      setError(err.response?.status === 429 ? err.response.data.error : 'Calculation failed. Check the console.');
       console.error(err);
     } finally { setLoading(false); }
   };
@@ -98,6 +98,8 @@ export default function App() {
       setLoginError(
         err.response?.status === 401
           ? 'Incorrect password. Please try again.'
+          : err.response?.status === 429
+          ? err.response.data.error
           : 'Login failed. Please try again.'
       );
     } finally {
@@ -130,6 +132,8 @@ export default function App() {
     } catch (err) {
       if (err.response?.status === 409) {
         setSignupError('An account with that email already exists.');
+      } else if (err.response?.status === 429) {
+        setSignupError(err.response.data.error);
       } else {
         setSignupError('Sign up failed. Please try again.');
       }

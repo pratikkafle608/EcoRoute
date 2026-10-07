@@ -98,7 +98,7 @@ curling — this app does **not** expose plain collection endpoints like
 misleading 500 before the fix in step 5) by design. Known-good real endpoints:
 
 ```
-curl -s http://127.0.0.1:8081/api/users
+curl -s http://127.0.0.1:8081/api/users/1   # name + userId only; there is deliberately no list-all endpoint
 curl -s http://127.0.0.1:8081/api/routes/history/1
 curl -s http://127.0.0.1:8081/api/vehicles/user/1
 ```
@@ -183,10 +183,10 @@ service if it's ever in doubt). After pushing, poll the production URL
 rather than declaring victory immediately — a Render deploy typically takes
 1-3 minutes:
 ```
-until curl -s -o /dev/null -w "%{http_code}" https://<service>.onrender.com/api/users | grep -q 200; do
+until curl -s -o /dev/null -w "%{http_code}" https://<service>.onrender.com/api/routes/history/1 | grep -q 200; do
   sleep 15
 done
-curl -s https://<service>.onrender.com/api/users
+curl -s https://<service>.onrender.com/api/routes/history/1
 ```
 Only report the task complete once this production check actually returns
 the expected data — a successful `git push` is not itself confirmation that
