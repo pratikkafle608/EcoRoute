@@ -7,6 +7,7 @@ import com.ecorouteoptimizer.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class LoginController {
 
     @Autowired private PasswordRepository passwordRepo;
     @Autowired private UserRepository userRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     @Transactional(readOnly = true)
@@ -42,7 +44,7 @@ public class LoginController {
                     .body(Map.of("error", "No account found for this user"));
         }
 
-        if (!record.getPassword().equals(inputPassword)) {
+        if (!passwordEncoder.matches(inputPassword, record.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Incorrect password"));
         }
@@ -75,7 +77,7 @@ public class LoginController {
 
         Password pwd = new Password();
         pwd.setUser(saved);
-        pwd.setPassword(password);
+        pwd.setPassword(passwordEncoder.encode(password));
         passwordRepo.save(pwd);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);

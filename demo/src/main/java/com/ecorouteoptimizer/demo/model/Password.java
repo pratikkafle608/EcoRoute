@@ -17,6 +17,7 @@ public class Password {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Column(name = "`password`", nullable = false)
+    // BCrypt hash (60 chars), never the plain password
+    @Column(name = "`password`", nullable = false, length = 100)
     private String password;
 }
