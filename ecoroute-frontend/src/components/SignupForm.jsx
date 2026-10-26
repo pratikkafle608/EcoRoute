@@ -27,7 +27,9 @@ export default function SignupForm({ signupForm, setSignupForm, signupError, sig
           />
           <input
               type="password"
-              placeholder="Password"
+              placeholder="Password (min 8 characters)"
+              minLength={8}
+              maxLength={72}
               value={signupForm.password}
               onChange={e => setSignupForm(f => ({ ...f, password: e.target.value }))}
               style={input}

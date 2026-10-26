@@ -5,6 +5,7 @@ import com.ecorouteoptimizer.demo.model.User;
 import com.ecorouteoptimizer.demo.repository.PasswordRepository;
 import com.ecorouteoptimizer.demo.repository.UserRepository;
 import com.ecorouteoptimizer.demo.service.AuthTokens;
+import com.ecorouteoptimizer.demo.service.CredentialValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,8 @@ public class LoginController {
     @PostMapping("/login")
     @Transactional(readOnly = true)
     public ResponseEntity<?> login(@RequestBody Map<String, Object> body) {
-        String email = (String) body.get("email");
-        String inputPassword = (String) body.get("password");
-
-        if (email == null || email.isBlank() || inputPassword == null || inputPassword.isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "email and password are required"));
-        }
+        String email = CredentialValidator.email(CredentialValidator.text(body, "email"));
+        String inputPassword = CredentialValidator.loginPassword(CredentialValidator.raw(body, "password"));
 
         User user = userRepo.findByEmail(email).orElse(null);
 
@@ -58,14 +55,9 @@ public class LoginController {
     @PostMapping("/signup")
     @Transactional
     public ResponseEntity<?> signup(@RequestBody Map<String, Object> body) {
-        String name     = (String) body.get("name");
-        String email    = (String) body.get("email");
-        String password = (String) body.get("password");
-
-        if (name == null || name.isBlank() || email == null || email.isBlank()
-                || password == null || password.isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "name, email and password are required"));
-        }
+        String name     = CredentialValidator.name(CredentialValidator.text(body, "name"));
+        String email    = CredentialValidator.email(CredentialValidator.text(body, "email"));
+        String password = CredentialValidator.newPassword(CredentialValidator.raw(body, "password"));
 
         if (userRepo.findByEmail(email).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
