@@ -36,6 +36,7 @@ public class AuthConfig implements WebMvcConfigurer {
                 res.getWriter().write("{\"error\":\"Please log in again.\"}");
                 return false;
             }
-        }).addPathPatterns("/api/**").excludePathPatterns("/api/login", "/api/signup");
+        }).addPathPatterns("/api/**").excludePathPatterns("/api/login", "/api/signup")
+                .order(0); // before RateLimitConfig, which keys calculate limits on the user id
     }
 }

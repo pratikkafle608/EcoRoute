@@ -15,6 +15,7 @@ public final class CredentialValidator {
     private static final int NAME_MAX = 100;
     private static final int PASSWORD_MIN = 8;
     private static final int PASSWORD_MAX_BYTES = 72; // BCrypt ignores everything past 72 bytes
+    private static final int LOGIN_PASSWORD_MAX = 1024; // just bounds the work; BCrypt only reads 72 bytes
 
     private static final Pattern EMAIL = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$");
     // Letters (any language), spaces, apostrophes, hyphens and periods, starting with a letter
@@ -42,6 +43,13 @@ public final class CredentialValidator {
         return email;
     }
 
+    // Login: only a length bound, no format check - accounts created before the signup rules existed
+    // may have emails the strict pattern rejects, and they must still be able to log in
+    public static String loginEmail(String email) {
+        if (email.length() > EMAIL_MAX) throw new IllegalArgumentException("Enter a valid email address");
+        return email;
+    }
+
     public static String name(String name) {
         if (name.length() > NAME_MAX || !NAME.matcher(name).matches()) {
             throw new IllegalArgumentException("Name may only contain letters, spaces, apostrophes, hyphens and periods (max " + NAME_MAX + ")");
@@ -49,11 +57,10 @@ public final class CredentialValidator {
         return name;
     }
 
-    // Login: only shape checks, so accounts created before the length rule still work
+    // Login: only a generous length bound. Older passwords may be over 72 bytes or contain control
+    // characters (they were hashed before these rules existed) and must keep working
     public static String loginPassword(String password) {
-        if (CONTROL_CHARS.matcher(password).find() || bytes(password) > PASSWORD_MAX_BYTES) {
-            throw new IllegalArgumentException("Invalid password");
-        }
+        if (password.length() > LOGIN_PASSWORD_MAX) throw new IllegalArgumentException("Invalid password");
         return password;
     }
 
